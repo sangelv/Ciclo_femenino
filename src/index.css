@@ -1,0 +1,926 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Colors — Sunplanet warm + rose accent */
+  --bg: #FBF7EF;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fefcf9;
+  --bg-nav: rgba(251,247,239,0.92);
+  --bg-subtle: #f5efe6;
+  --text: #1a1a1a;
+  --text-light: #5c524a;
+  --text-muted: #9c8e82;
+  --accent: #c2185b;
+  --accent-soft: #e8839e;
+  --accent-light: #fce4ec;
+  --accent-glow: rgba(194,24,91,0.08);
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.1);
+  --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03);
+  --shadow-lg: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-hover: 0 8px 32px rgba(0,0,0,0.08);
+
+  /* Phase colors */
+  --menstrual: #c2185b;
+  --menstrual-bg: #fce4ec;
+  --follicular: #6a9f3a;
+  --follicular-bg: #eef5e5;
+  --ovulatory: #e8a817;
+  --ovulatory-bg: #fef6dc;
+  --luteal: #8d6e63;
+  --luteal-bg: #f0ebe7;
+
+  /* Radius */
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+  --radius-full: 50%;
+
+  /* Fonts */
+  --font-display: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ===== Layout ===== */
+
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 16px 100px;
+  min-height: 100dvh;
+}
+
+.page-header {
+  padding: 20px 0 12px;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  color: var(--text);
+  margin-bottom: 2px;
+
+}
+
+.page-header p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* ===== Cards ===== */
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.card-accent {
+  border-left: 4px solid var(--accent);
+}
+
+.card h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.card p {
+  color: var(--text-light);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+/* ===== Phase Badge ===== */
+
+.phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 24px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+}
+
+.phase-badge.menstrual { background: #fce4ec; color: var(--menstrual); }
+.phase-badge.follicular { background: #f1f8e9; color: var(--follicular); }
+.phase-badge.ovulatory { background: #fff8e1; color: var(--ovulatory); }
+.phase-badge.luteal { background: #efebe9; color: var(--luteal); }
+
+/* ===== Buttons ===== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+.btn-primary:hover { background: #ad1457; transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: #efebe9; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-light);
+}
+.btn-ghost:hover { color: var(--accent); }
+
+/* ===== Forms ===== */
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  background: var(--bg-card);
+  color: var(--text);
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ===== Chip Selectors ===== */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 8px 16px;
+  border-radius: 24px;
+  border: 1.5px solid var(--border);
+  background: var(--bg-card);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+
+.chip:hover { border-color: var(--accent-light); }
+.chip.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* ===== Bottom Nav ===== */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-nav);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 0;
+  padding-bottom: max(6px, env(safe-area-inset-bottom));
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 4px 8px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.nav-item span.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  transition: transform 0.3s ease;
+}
+
+.nav-item span.icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.nav-item.active {
+  color: var(--accent);
+}
+
+.nav-item.active span.icon {
+  transform: scale(1.08);
+}
+
+/* ===== Stat Grid ===== */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.stat-card .stat-value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.stat-card .stat-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ===== Food / Exercise Item ===== */
+
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+.item-row .item-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  width: 36px;
+  text-align: center;
+}
+
+.item-row .item-info h4 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.item-row .item-info p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.item-row .item-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ===== Avoid List ===== */
+
+.avoid-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.avoid-tag {
+  padding: 4px 12px;
+  background: #ffebee;
+  color: #c62828;
+  border-radius: 16px;
+  font-size: 0.8rem;
+}
+
+/* ===== Tip Box ===== */
+
+.tip-box {
+  background: linear-gradient(135deg, #fff3e0, #fff8e1);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-top: 16px;
+  font-size: 0.88rem;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+.tip-box::before {
+  content: '💡 ';
+}
+
+/* ===== Moon Calendar ===== */
+
+.moon-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.moon-day {
+  text-align: center;
+  padding: 8px 2px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  cursor: default;
+}
+
+.moon-day .moon-emoji {
+  font-size: 1.2rem;
+  display: block;
+}
+
+.moon-day .moon-num {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+}
+
+.moon-day.today {
+  background: var(--accent-light);
+  font-weight: 700;
+}
+
+/* ===== Sync Indicator ===== */
+
+.sync-indicator {
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+
+.sync-indicator.alta { background: linear-gradient(135deg, #e8f5e9, #f1f8e9); }
+.sync-indicator.media { background: linear-gradient(135deg, #fff8e1, #fff3e0); }
+.sync-indicator.neutral { background: linear-gradient(135deg, #f3e5f5, #ede7f6); }
+
+.sync-level {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+/* ===== Hormone Bar ===== */
+
+.hormone-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.hormone-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hormone-label {
+  font-size: 0.8rem;
+  width: 110px;
+  color: var(--text-light);
+}
+
+.hormone-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.hormone-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.hormone-fill.estrogen { background: #e91e63; }
+.hormone-fill.progesterone { background: #ff9800; }
+.hormone-fill.testosterone { background: #2196f3; }
+
+/* ===== Setup Page ===== */
+
+.setup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80dvh;
+  text-align: center;
+  padding: 24px;
+}
+
+.setup-container .logo {
+  font-size: 3rem;
+  margin-bottom: 8px;
+}
+
+.setup-container h1 {
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.setup-container .tagline {
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  font-size: 0.95rem;
+}
+
+.setup-form {
+  width: 100%;
+  max-width: 360px;
+  text-align: left;
+}
+
+/* ===== Scrollbar ===== */
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ===== Animations ===== */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* ===== Responsive ===== */
+
+/* ===== Dashboard Tabs ===== */
+
+.dash-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+.dash-tab {
+  flex: 1;
+  padding: 10px 8px;
+  border: none;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.dash-tab:hover {
+  color: var(--text-light);
+}
+
+.dash-tab.active {
+  background: var(--bg-card);
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* ===== Integrated Calendar ===== */
+
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.cal-header h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.cal-nav-btn {
+  border: none;
+  background: var(--bg-subtle);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  color: var(--text);
+}
+
+.cal-nav-btn:hover {
+  background: var(--border-strong);
+}
+
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.cal-weekday {
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 4px 0;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.cal-day {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 2px;
+  border-radius: var(--radius-xs);
+  min-height: 52px;
+  cursor: default;
+  transition: background 0.2s;
+}
+
+.cal-day.empty {
+  min-height: 0;
+}
+
+.cal-day-num {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+
+.cal-day-moon {
+  font-size: 0.85rem;
+  margin-top: 2px;
+  line-height: 1;
+}
+
+.cal-day.today {
+  background: var(--accent-light);
+}
+
+.cal-day.today .cal-day-num {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.cal-day.period {
+  background: var(--menstrual-bg);
+}
+
+.cal-day.period .cal-day-num {
+  color: var(--menstrual);
+}
+
+.cal-day.follicular-day {
+  background: var(--follicular-bg);
+}
+
+.cal-day.ovulatory-day {
+  background: var(--ovulatory-bg);
+}
+
+.cal-day.luteal-day {
+  background: var(--luteal-bg);
+}
+
+.cal-day.today.period {
+  background: linear-gradient(135deg, var(--menstrual-bg), var(--accent-light));
+}
+
+.cal-day.period-logged {
+  border: 1.5px solid var(--menstrual);
+}
+
+.cal-day-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--menstrual);
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Calendar legend */
+.cal-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.cal-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.cal-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* ===== Recommendation Cards ===== */
+
+.reco-section {
+  margin-bottom: 20px;
+}
+
+.reco-section-title {
+  font-family: var(--font-display);
+
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reco-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.reco-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  transition: all 0.3s ease;
+}
+
+.reco-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-1px);
+}
+
+.reco-card .reco-icon {
+  font-size: 1.5rem;
+  margin-bottom: 6px;
+}
+
+.reco-card .reco-name {
+  font-weight: 600;
+  font-size: 0.82rem;
+  margin-bottom: 3px;
+  color: var(--text);
+}
+
+.reco-card .reco-detail {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.reco-activity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.reco-activity:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.reco-activity .reco-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.reco-activity .reco-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 2px;
+}
+
+.reco-activity .reco-detail {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.reco-activity .reco-meta {
+  font-size: 0.7rem;
+  color: var(--accent-soft);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ===== Phase Indicator Bar ===== */
+
+.phase-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.phase-indicator::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  border-radius: inherit;
+}
+
+.phase-indicator .phase-emoji-large {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.phase-indicator .phase-info {
+  flex: 1;
+}
+
+.phase-indicator .phase-name {
+  font-family: var(--font-display);
+
+  font-size: 1.3rem;
+  color: var(--text);
+}
+
+.phase-indicator .phase-day {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+/* ===== Divider ===== */
+
+.section-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 20px 0;
+}
+
+@media (min-width: 768px) {
+  .app-container {
+    max-width: 520px;
+  }
+}
