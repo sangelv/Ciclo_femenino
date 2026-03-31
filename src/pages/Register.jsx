@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { saveDailyLog, getDailyLog, checkAndUpdatePeriodStart } from '../lib/supabase';
+import { saveDailyLog, getDailyLog, saveCycleConfig, getCycleConfig } from '../lib/supabase';
 
 const MOODS = [
   { value: 'feliz', label: '😊 Feliz' },
@@ -35,8 +35,10 @@ export default function Register() {
   const [notes, setNotes] = useState('');
   const [energy, setEnergy] = useState(3);
   const [sleep, setSleep] = useState(3);
+  const [isPeriodStart, setIsPeriodStart] = useState(false);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [periodUpdated, setPeriodUpdated] = useState(false);
 
   useEffect(() => {
     loadExisting(date);
@@ -51,6 +53,7 @@ export default function Register() {
       setNotes(existing.notes || '');
       setEnergy(existing.energy || 3);
       setSleep(existing.sleep || 3);
+      setIsPeriodStart(existing.is_period_start || false);
     } else {
       setMood('');
       setFlow('none');
@@ -58,8 +61,10 @@ export default function Register() {
       setNotes('');
       setEnergy(3);
       setSleep(3);
+      setIsPeriodStart(false);
     }
     setSaved(false);
+    setPeriodUpdated(false);
   }
 
   function toggleSymptom(s) {
@@ -69,29 +74,35 @@ export default function Register() {
     setSaved(false);
   }
 
-  const [periodDetected, setPeriodDetected] = useState(false);
-
   async function handleSave() {
     setLoading(true);
-    setPeriodDetected(false);
+    setPeriodUpdated(false);
     try {
-      await saveDailyLog({ date, mood, flow, symptoms, notes, energy, sleep });
+      await saveDailyLog({
+        date, mood, flow, symptoms, notes, energy, sleep,
+        is_period_start: isPeriodStart,
+      });
 
-      // Check if this log marks a new period start
-      const isNewPeriod = await checkAndUpdatePeriodStart(date, flow);
-      if (isNewPeriod) {
-        setPeriodDetected(true);
-        setTimeout(() => setPeriodDetected(false), 4000);
+      // Only update cycle start date if user explicitly marked it
+      if (isPeriodStart) {
+        const config = await getCycleConfig();
+        if (config) {
+          await saveCycleConfig({ ...config, last_period_date: date });
+          setPeriodUpdated(true);
+          setTimeout(() => setPeriodUpdated(false), 4000);
+        }
       }
 
       setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
+      setTimeout(() => setSaved(false), 2500);
     } catch (err) {
       console.error('Error saving:', err);
     } finally {
       setLoading(false);
     }
   }
+
+  const showPeriodStartOption = flow !== 'none';
 
   return (
     <div className="fade-in">
@@ -101,14 +112,14 @@ export default function Register() {
       </div>
 
       <div className="card">
-        <div className="form-group">
+        <div className="form-group" style={{ marginBottom: 0 }}>
           <label>Fecha</label>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} max={today} />
         </div>
       </div>
 
       <div className="card">
-        <h3>😊 Estado de ánimo</h3>
+        <h3>Estado de ánimo</h3>
         <div className="chips" style={{ marginTop: 10 }}>
           {MOODS.map((m) => (
             <button
@@ -123,22 +134,70 @@ export default function Register() {
       </div>
 
       <div className="card">
-        <h3>🩸 Flujo menstrual</h3>
+        <h3>Flujo menstrual</h3>
         <div className="chips" style={{ marginTop: 10 }}>
           {FLOWS.map((f) => (
             <button
               key={f.value}
               className={`chip ${flow === f.value ? 'active' : ''}`}
-              onClick={() => { setFlow(f.value); setSaved(false); }}
+              onClick={() => { setFlow(f.value); setSaved(false); if (f.value === 'none') setIsPeriodStart(false); }}
             >
               {f.icon} {f.label}
             </button>
           ))}
         </div>
+
+        {/* Period start toggle — only shows when flow is selected */}
+        {showPeriodStartOption && (
+          <div
+            style={{
+              marginTop: 14,
+              padding: '12px 14px',
+              background: isPeriodStart ? 'var(--menstrual-bg)' : 'var(--bg-subtle)',
+              borderRadius: 'var(--radius-sm)',
+              border: isPeriodStart ? '1.5px solid var(--menstrual)' : '1.5px solid transparent',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+            }}
+            onClick={() => { setIsPeriodStart(!isPeriodStart); setSaved(false); }}
+          >
+            <div
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 6,
+                border: isPeriodStart ? '2px solid var(--menstrual)' : '2px solid var(--text-muted)',
+                background: isPeriodStart ? 'var(--menstrual)' : 'transparent',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {isPeriodStart && (
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+              )}
+            </div>
+            <div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 600, color: isPeriodStart ? 'var(--menstrual)' : 'var(--text)' }}>
+                Primer día de mi periodo
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 1 }}>
+                Marca esto solo si hoy te llegó el periodo. Tu calendario se actualizará.
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="card">
-        <h3>🤒 Síntomas</h3>
+        <h3>Síntomas</h3>
         <div className="chips" style={{ marginTop: 10 }}>
           {SYMPTOMS.map((s) => (
             <button
@@ -153,41 +212,41 @@ export default function Register() {
       </div>
 
       <div className="card">
-        <h3>⚡ Nivel de energía</h3>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Baja</span>
+        <h3>Nivel de energía</h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', flexShrink: 0 }}>Baja</span>
           <input
             type="range"
             min={1}
             max={5}
             value={energy}
             onChange={(e) => { setEnergy(Number(e.target.value)); setSaved(false); }}
-            style={{ flex: 1 }}
+            style={{ flex: 1, minWidth: 0 }}
           />
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Alta</span>
-          <span style={{ fontWeight: 600, minWidth: 24, textAlign: 'center' }}>{energy}</span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', flexShrink: 0 }}>Alta</span>
+          <span style={{ fontWeight: 600, minWidth: 20, textAlign: 'center', flexShrink: 0 }}>{energy}</span>
         </div>
       </div>
 
       <div className="card">
-        <h3>😴 Calidad de sueño</h3>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Mala</span>
+        <h3>Calidad de sueño</h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', flexShrink: 0 }}>Mala</span>
           <input
             type="range"
             min={1}
             max={5}
             value={sleep}
             onChange={(e) => { setSleep(Number(e.target.value)); setSaved(false); }}
-            style={{ flex: 1 }}
+            style={{ flex: 1, minWidth: 0 }}
           />
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Excelente</span>
-          <span style={{ fontWeight: 600, minWidth: 24, textAlign: 'center' }}>{sleep}</span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', flexShrink: 0 }}>Excelente</span>
+          <span style={{ fontWeight: 600, minWidth: 20, textAlign: 'center', flexShrink: 0 }}>{sleep}</span>
         </div>
       </div>
 
       <div className="card">
-        <h3>📝 Notas</h3>
+        <h3>Notas</h3>
         <div className="form-group" style={{ marginTop: 10, marginBottom: 0 }}>
           <textarea
             placeholder="¿Algo más que quieras registrar?"
@@ -197,10 +256,10 @@ export default function Register() {
         </div>
       </div>
 
-      {periodDetected && (
+      {periodUpdated && (
         <div className="card" style={{ background: 'var(--menstrual-bg)', borderLeft: '4px solid var(--menstrual)', marginTop: 8 }}>
           <p style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--menstrual)' }}>
-            Nuevo ciclo detectado
+            Nuevo ciclo registrado
           </p>
           <p style={{ fontSize: '0.82rem', color: 'var(--text-light)', marginTop: 4 }}>
             Tu calendario y fases se actualizaron a partir del {new Date(date + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}.

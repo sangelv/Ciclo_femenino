@@ -72,32 +72,6 @@ export async function getCycleConfig() {
   return data;
 }
 
-// --- Period detection ---
-// When flow is logged, check if this is the start of a new period.
-// "New period start" = flow registered on a date where the day before had no flow.
-export async function checkAndUpdatePeriodStart(date, flow) {
-  if (flow === 'none') return false;
-
-  // Check if previous day had flow
-  const prev = new Date(date);
-  prev.setDate(prev.getDate() - 1);
-  const prevDate = prev.toISOString().split('T')[0];
-  const prevLog = await getDailyLog(prevDate);
-
-  const prevHadFlow = prevLog && prevLog.flow && prevLog.flow !== 'none';
-
-  if (!prevHadFlow) {
-    // This is the start of a new period — update last_period_date
-    const config = await getCycleConfig();
-    if (config) {
-      const updated = { ...config, last_period_date: date };
-      await saveCycleConfig(updated);
-      return true; // period start detected
-    }
-  }
-  return false;
-}
-
 // --- Local fallback helpers ---
 function saveLocal(key, item) {
   const items = getLocal(key);
